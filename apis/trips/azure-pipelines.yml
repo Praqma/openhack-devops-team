@@ -34,3 +34,4 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/apis/trips/Dockerfile'
         tags: |
           $(tag) 
+ 
