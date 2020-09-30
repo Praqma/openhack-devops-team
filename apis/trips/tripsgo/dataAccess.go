@@ -1,5 +1,7 @@
 package tripsgo
 
+// Check issue comment
+
 import (
 	"database/sql"
 	"encoding/json"
