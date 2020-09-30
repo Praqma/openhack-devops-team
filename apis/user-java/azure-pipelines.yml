@@ -34,3 +34,4 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/apis/user-java/Dockerfile'
         tags: |
           $(tag)
+
