@@ -33,4 +33,5 @@ stages:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/apis/trips/Dockerfile'
         tags: |
-          $(tag)
+          $(tag) 
+ 
