@@ -9,7 +9,7 @@ trigger:
     - master
   paths:
     include:
-    - apis/user-java
+    - apis/user-java/*
 
 resources:
 - repo: self
