@@ -1,0 +1,47 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include: 
+    - apis/userprofile/*
+
+resources:
+- repo: self
+
+name: User Profile API
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '32ca2d78-4f66-4d8a-8930-8dcf1edf78cf'
+  imageRepository: 'devopsoh/api-user'
+  containerRegistry: 'openhack3mr4acr.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/apis/userprofile/Dockerfile'
+  tag: '$(Build.BuildId)'  
+  
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+    - script: echo Holaaaa
