@@ -7,10 +7,12 @@ trigger:
   branches:
     include:
     - master
+    - releases/*
   paths:
     include:
-    - apis/trips
-
+    - docs/*
+    exclude:
+    - docs/README.md
 resources:
 - repo: self
 
@@ -30,6 +32,6 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/apis/trips/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/apis/userprofile/Dockerfile'
         tags: |
           $(tag)

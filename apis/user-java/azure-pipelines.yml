@@ -9,7 +9,7 @@ trigger:
     - master
   paths:
     include:
-    - apis/trips
+    - apis/user-java
 
 resources:
 - repo: self
@@ -30,6 +30,6 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/apis/trips/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/apis/user-java/Dockerfile'
         tags: |
           $(tag)
