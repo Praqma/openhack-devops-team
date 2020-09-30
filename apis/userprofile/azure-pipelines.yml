@@ -7,12 +7,10 @@ trigger:
   branches:
     include:
     - master
-    - releases/*
   paths:
     include:
-    - docs/*
-    exclude:
-    - docs/README.md
+    - apis/userprofile
+
 resources:
 - repo: self
 
