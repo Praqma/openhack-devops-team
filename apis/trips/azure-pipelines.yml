@@ -2,8 +2,14 @@
 # Build a Docker image 
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
+# specific path build
 trigger:
-- master
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - apis/trips
 
 resources:
 - repo: self
