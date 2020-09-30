@@ -7,9 +7,10 @@ trigger:
   branches:
     include:
     - master
+    - feature/*
   paths:
     include:
-    - apis/trips
+    - apis/trips/*
 
 resources:
 - repo: self
