@@ -33,4 +33,9 @@ stages:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/apis/poi/web/Dockerfile'
         tags: |
-          $(tag)
+          $(tag) 
+ 
+ 
+ 
+ 
+ 
