@@ -16,6 +16,7 @@ resources:
 - repo: self
 
 variables:
+
   tag: '$(Build.BuildId)'
 
 stages:
@@ -32,8 +33,8 @@ stages:
         command: 'build'
         Dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
         arguments: '--target build'
-        #tags: | 
-        #  temp-image:$(tag)
+        tags: | 
+          temp-image
     - task: Bash@3
       inputs:
         targetType: 'inline'
