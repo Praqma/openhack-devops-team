@@ -33,8 +33,9 @@ stages:
         command: 'build'
         Dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
         arguments: '--target build'
-        tags: | 
-          temp-image
+        imageName: temp-image:$(tag)
+        #tags: | 
+        #  temp-image
     - task: Bash@3
       inputs:
         targetType: 'inline'
