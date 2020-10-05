@@ -38,7 +38,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          ls -ll
+          docker images
           docker create --name temp-container temp-image:$(tag)
           docker cp temp-container:/app/tests/UnitTests/TestResults/ (Build.ArtifactStagingDirectory)/testresults 
           docker rm -fv temp-container
