@@ -19,11 +19,32 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
-- stage: Build
-  displayName: Build image
-  jobs:  
+- stage: Build And test
+  displayName: Build And Unit Test
+  jobs:
   - job: Build
     displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      inputs:
+        command: 'build'
+        Dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
+        arguments: '--target build'
+        tags: build-$(tag)
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker create --name temp-container build-$(tag)
+          docker cp temp-container:/app/tests/UnitTests/TestResults/ (Build.ArtifactStagingDirectory)/testresults 
+          docker rm -fv temp-container
+- stage: Build Final
+  displayName: Build Runtime Image
+  jobs:  
+  - job: Publish
+    displayName: Build and Publish
     pool:
       vmImage: 'ubuntu-latest'
     steps:
@@ -33,9 +54,5 @@ stages:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
         tags: |
-          $(tag) 
- 
- 
- 
- 
- 
+          $(tag)
+
