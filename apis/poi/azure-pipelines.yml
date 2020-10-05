@@ -42,7 +42,13 @@ stages:
           docker create --name temp-container temp-image:$(tag)
           docker cp temp-container:/app/tests/UnitTests/TestResults/ $(Build.ArtifactStagingDirectory)/testresults 
           docker rm -fv temp-container
-          ls $(Build.ArtifactStagingDirectory)/testresults
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'XUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        searchFolder: '$(Build.ArtifactStagingDirectory)/testresults'
+        mergeTestResults: true
+        testRunTitle: 'Unit Tests'
 - stage: Build_Final
   displayName: Build Runtime Image
   jobs:  
