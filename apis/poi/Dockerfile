@@ -1,18 +1,24 @@
-FROM microsoft/dotnet:2.1-sdk AS build-env
+# Base
+FROM microsoft/dotnet:2.1-aspnetcore-runtime as base
+EXPOSE 80
+EXPOSE 443
+
+# Build and Test
+FROM microsoft/dotnet:2.1-sdk AS build
 WORKDIR /app
 
-# copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
-
-# copy everything else and build
 COPY . ./
-RUN dotnet publish -c Release -o out
-COPY ./appsettings.*.json /app/out/
-COPY ./appsettings.json /app/out/
 
-# build runtime image
-FROM microsoft/dotnet:2.1-aspnetcore-runtime
+RUN dotnet build "web/poi.csproj"
+RUN dotnet build "tests/UnitTests/UnitTests.csproj"
+RUN dotnet test "tests/UnitTests/UnitTests.csproj" --logger "trx;LogFileName=poi.trx" 
+
+# Publish
+FROM build as publish
+RUN dotnet publish "web/poi.csproj" -c Release -o out
+
+# Final
+FROM base as final
 WORKDIR /app
 
 ENV SQL_USER="YourUserName" \
@@ -23,7 +29,6 @@ WEB_PORT="8080" \
 WEB_SERVER_BASE_URI="http://0.0.0.0" \
 ASPNETCORE_ENVIRONMENT="Production"
 
-COPY --from=build-env /app/out .
+COPY --from=publish /app/web/out .
 
 ENTRYPOINT ["dotnet", "poi.dll"]
-
