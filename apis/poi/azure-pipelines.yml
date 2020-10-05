@@ -35,16 +35,14 @@ stages:
         command: 'build'
         Dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
         arguments: "-t temp-image:$(tag) --target build"
-        #tags: | 
-        #  temp-image
     - task: Bash@3
       inputs:
         targetType: 'inline'
         script: |
-          docker images
           docker create --name temp-container temp-image:$(tag)
           docker cp temp-container:/app/tests/UnitTests/TestResults/ $(Build.ArtifactStagingDirectory)/testresults 
           docker rm -fv temp-container
+          ls $(Build.ArtifactStagingDirectory)/testresults
 - stage: Build_Final
   displayName: Build Runtime Image
   jobs:  
@@ -54,7 +52,7 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build Deployable Image
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
