@@ -10,7 +10,7 @@ trigger:
     - feature/*
   paths:
     include:
-    - /apis/poi/web/*
+    - /apis/poi/*
 
 resources:
 - repo: self
@@ -31,7 +31,7 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/apis/poi/web/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
         tags: |
           $(tag) 
  
