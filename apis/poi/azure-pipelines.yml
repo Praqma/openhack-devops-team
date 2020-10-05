@@ -16,7 +16,9 @@ resources:
 - repo: self
 
 variables:
-
+  #dockerRegistryServiceConnection: '????'
+  #imageRepository: 'devopsoh/api-poi'
+  #containerRegistry: 'openhackydy7auy8acr.azurecr.io'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -32,8 +34,7 @@ stages:
       inputs:
         command: 'build'
         Dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
-        arguments: '--target build'
-        imageName: temp-image:$(tag)
+        arguments: "-t temp-image:$(tag) --target build"
         #tags: | 
         #  temp-image
     - task: Bash@3
