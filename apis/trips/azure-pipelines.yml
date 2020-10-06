@@ -19,6 +19,31 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
+- stage: Build_Test
+  displayName: Build and Unit Test
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: GoTool@0
+      inputs:
+        version: '1.14'
+    - task: Go@0
+      inputs:
+        command: 'get'
+        arguments: '-d'
+        workingDirectory: '$(Build.SourcesDirectory)/apis/trips'
+    - task: Go@0
+      inputs:
+        command: 'build'
+        workingDirectory: '$(Build.SourcesDirectory)/apis/trips'
+    - task: Go@0
+      inputs:
+        command: 'test'
+        arguments: '-v ./tests -cover'
+        workingDirectory: '$(Build.SourcesDirectory)/apis/trips'
 - stage: Build
   displayName: Build image
   jobs:  
@@ -35,8 +60,3 @@ stages:
         tags: |
           $(tag) 
  
-
-
-
-
-
