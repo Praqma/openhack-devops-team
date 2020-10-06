@@ -16,6 +16,11 @@ resources:
 - repo: self
 
 variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
+  imageRepository: 'devopsoh/api-userprofile'
+  containerRegistry: 'openhackydy7auy8acr.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/apis/userprofile/Dockerfile'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -30,7 +35,7 @@ stages:
     - task: Docker@2
       inputs:
         command: 'build'
-        Dockerfile: '$(Build.SourcesDirectory)/apis/userprofile/Dockerfile'
+        Dockerfile: '$(dockerfilePath)'
         arguments: "-t temp-image:$(tag) --target build"
     - task: Bash@3
       inputs:
@@ -57,8 +62,10 @@ stages:
     - task: Docker@2
       displayName: Build Deployable Image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/apis/userprofile/Dockerfile'
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
         arguments: "--target final"
         tags: |
           $(tag)
