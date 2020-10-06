@@ -45,7 +45,7 @@ stages:
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'XUnit'
-        testResultsFiles: '**/*.xml'
+        testResultsFiles: '**/*.trx'
         searchFolder: '$(Build.ArtifactStagingDirectory)/testresults'
         mergeTestResults: true
         testRunTitle: 'Unit Tests'
