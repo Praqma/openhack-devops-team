@@ -4,7 +4,8 @@ COPY . /app
 
 WORKDIR  /app
 
-RUN npm clean-install-test
+RUN npm clean-install
+RUN npm test
 
 FROM node:8-alpine AS final
 

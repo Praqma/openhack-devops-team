@@ -37,7 +37,7 @@ stages:
         targetType: 'inline'
         script: |
           docker create --name temp-container temp-image:$(tag)
-          docker cp temp-container:/reports/ $(Build.ArtifactStagingDirectory)/testresults 
+          docker cp temp-container:/app/reports/ $(Build.ArtifactStagingDirectory)/testresults 
           docker rm -fv temp-container
     - task: PublishTestResults@2
       inputs:
