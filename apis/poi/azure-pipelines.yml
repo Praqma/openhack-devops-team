@@ -44,7 +44,7 @@ stages:
           docker rm -fv temp-container
     - task: PublishTestResults@2
       inputs:
-        testResultsFormat: 'XUnit'
+        testResultsFormat: 'VSTest'
         testResultsFiles: '**/*.trx'
         searchFolder: '$(Build.ArtifactStagingDirectory)/testresults'
         mergeTestResults: true
