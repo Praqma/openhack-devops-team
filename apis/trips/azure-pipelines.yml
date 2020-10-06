@@ -16,6 +16,11 @@ resources:
 - repo: self
 
 variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
+  imageRepository: 'devopsoh/api-trips'
+  containerRegistry: 'openhackydy7auy8acr.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/apis/trips/Dockerfile'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -44,19 +49,21 @@ stages:
         command: 'test'
         arguments: '-v ./tests -cover'
         workingDirectory: '$(Build.SourcesDirectory)/apis/trips'
-- stage: Build
-  displayName: Build image
+- stage: Build_Final
+  displayName: Build Runtime Image
   jobs:  
-  - job: Build
-    displayName: Build
+  - job: Publish_Image
+    displayName: Build and Publish Image
     pool:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build And Push Image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/apis/trips/Dockerfile'
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag) 
  
