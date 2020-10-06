@@ -49,7 +49,6 @@ stages:
         searchFolder: '$(Build.ArtifactStagingDirectory)/testresults'
         mergeTestResults: true
         testRunTitle: 'Unit Tests'
-        
 - stage: Build_Final
   displayName: Build Runtime Image
   jobs:  
