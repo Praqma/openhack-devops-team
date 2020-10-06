@@ -16,6 +16,11 @@ resources:
 - repo: self
 
 variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
+  imageRepository: 'devopsoh/api-user-java'
+  containerRegistry: 'openhackydy7auy8acr.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/apis/user-java/Dockerfile'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -30,7 +35,7 @@ stages:
     - task: Docker@2
       inputs:
         command: 'build'
-        Dockerfile: '$(Build.SourcesDirectory)/apis/user-java/Dockerfile'
+        Dockerfile: '$(dockerfilePath)'
         arguments: "-t temp-image:$(tag) --target build-env"
     - task: Bash@3
       inputs:
@@ -55,13 +60,11 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build Deployable Image
+      displayName: Build And Push Image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/apis/user-java/Dockerfile'
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-
-
-
-
