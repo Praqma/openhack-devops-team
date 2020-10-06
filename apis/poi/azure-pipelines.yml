@@ -16,26 +16,53 @@ resources:
 - repo: self
 
 variables:
+  #dockerRegistryServiceConnection: '????'
+  #imageRepository: 'devopsoh/api-poi'
+  #containerRegistry: 'openhackydy7auy8acr.azurecr.io'
   tag: '$(Build.BuildId)'
 
 stages:
 - stage: Build
-  displayName: Build image
-  jobs:  
+  displayName: Build And Unit Test
+  jobs:
   - job: Build
     displayName: Build
     pool:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build an image
+      inputs:
+        command: 'build'
+        Dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
+        arguments: "-t temp-image:$(tag) --target build"
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker create --name temp-container temp-image:$(tag)
+          docker cp temp-container:/app/tests/UnitTests/TestResults/ $(Build.ArtifactStagingDirectory)/testresults 
+          docker rm -fv temp-container
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'XUnit'
+        testResultsFiles: '**/*.trx'
+        searchFolder: '$(Build.ArtifactStagingDirectory)/testresults'
+        mergeTestResults: true
+        testRunTitle: 'Unit Tests'
+        
+- stage: Build_Final
+  displayName: Build Runtime Image
+  jobs:  
+  - job: Publish_Image
+    displayName: Build and Publish Image
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      displayName: Build Deployable Image
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
         tags: |
-          $(tag) 
- 
- 
- 
- 
- 
+          $(tag)
+
