@@ -11,7 +11,7 @@ COPY . ./
 
 RUN dotnet build "web/poi.csproj"
 RUN dotnet build "tests/UnitTests/UnitTests.csproj"
-RUN dotnet test "tests/UnitTests/UnitTests.csproj" --logger "trx;LogFileName=poi.trx" 
+RUN dotnet test "tests/UnitTests/UnitTests.csproj" --logger "xml;LogFileName=poi.xml" 
 
 # Publish
 FROM build as publish
