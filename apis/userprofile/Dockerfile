@@ -1,6 +1,12 @@
-FROM node:8-alpine
+FROM node:8-alpine AS build
 
 COPY . /app
+
+WORKDIR  /app
+
+RUN npm clean-install-test
+
+FROM node:8-alpine AS final
 
 WORKDIR  /app
 
