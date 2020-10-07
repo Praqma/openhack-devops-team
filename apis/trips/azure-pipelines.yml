@@ -88,7 +88,7 @@ stages:
         WebAppName: $(appName)
         deployToSlotOrASE: true
         ResourceGroupName: 'openhackydy7auy8rg'
-        SlotName: 'staging'
+        SlotName: 'production'
         DockerNamespace: 'openhackydy7auy8acr.azurecr.io'
         DockerRepository: 'devopsoh/api-trips'
         DockerImageTag: '$(Build.BuildId)'
