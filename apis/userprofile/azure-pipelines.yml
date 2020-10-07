@@ -3,7 +3,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 # What happens here when I give it a different name what was created in GUI?
-name: UserProfile
+name: ReallyDifferentName
 
 # specific path build
 trigger:
