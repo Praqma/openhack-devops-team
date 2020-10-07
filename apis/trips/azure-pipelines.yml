@@ -12,6 +12,8 @@ trigger:
     include:
     - apis/trips/*
 
+name: trips
+
 resources:
 - repo: self
 
@@ -20,6 +22,7 @@ variables:
   dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
   imageRepository: 'devopsoh/api-trips'
   containerRegistry: 'openhackydy7auy8acr.azurecr.io'
+  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   dockerfilePath: '$(Build.SourcesDirectory)/apis/trips/Dockerfile'
   tag: '$(Build.BuildId)'
 
@@ -50,6 +53,8 @@ stages:
         arguments: '-v ./tests -cover'
         workingDirectory: '$(Build.SourcesDirectory)/apis/trips'
 - stage: Build_Final
+  # Only push new image if it is master branch.
+  condition: and(succeeded(), eq(variables.isMaster, true)) 
   displayName: Build Runtime Image
   jobs:  
   - job: Publish_Image
