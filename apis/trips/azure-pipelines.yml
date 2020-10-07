@@ -80,15 +80,18 @@ stages:
   jobs:
   - job: Deploy
     steps:
-    - task: AzureRmWebAppDeployment@4
+    #- task: AzureRmWebAppDeployment@4
+    - task: AzureWebAppContainer@1
       inputs:
-        ConnectionType: 'AzureRM'
+        #ConnectionType: 'AzureRM'
         azureSubscription: $(azureSubscription)
-        appType: 'webAppContainer'
-        WebAppName: $(appName)
-        deployToSlotOrASE: true
-        ResourceGroupName: 'openhackydy7auy8rg'
-        SlotName: 'production'
-        DockerNamespace: 'openhackydy7auy8acr.azurecr.io'
-        DockerRepository: 'devopsoh/api-trips'
-        DockerImageTag: '$(Build.BuildId)'
+        #appType: 'webAppContainer'
+        #WebAppName: $(appName)
+        #deployToSlotOrASE: true
+        #ResourceGroupName: 'openhackydy7auy8rg'
+        #SlotName: 'production'
+        #DockerNamespace: 'openhackydy7auy8acr.azurecr.io'
+        #DockerRepository: 'devopsoh/api-trips'
+        #DockerImageTag: '$(Build.BuildId)'
+        appName: $(appName)
+        containers: $(containerRegistry)/$(imageRepository):$(tag)
