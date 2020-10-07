@@ -74,4 +74,17 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+- stage: Deploy
+  # Only deploy image if pushed from master branch. E.g after PR approval.
+  condition: and(succeeded(), eq(variables.isMaster, true)) 
+  displayName: Deploy Container
+  jobs:
+  - job: Deploy
+    steps:
+    - task: AzureWebAppContainer@1
+      inputs:
+        azureSubscription: $(azureSubscription)
+        appName: $(appName)
+        containers: $(containerRegistry)/$(imageRepository):$(tag)
+
 
