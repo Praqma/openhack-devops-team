@@ -19,7 +19,8 @@ resources:
 - repo: self
 
 variables:
-  # Container registry service connection established during pipeline creation
+  azureSubscription: 'OTA-PRD-197(87d46c94-c5c9-4807-8e95-788ae5f0629b)'
+  appName: 'openhackydy7auy8trips'
   dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
   imageRepository: 'devopsoh/api-trips'
   containerRegistry: 'openhackydy7auy8acr.azurecr.io'
@@ -71,5 +72,23 @@ stages:
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-          $(tag) 
- 
+          $(tag)
+- stage: Deploy
+  # Only deploy image if pushed from master branch. E.g after PR approval.
+  condition: and(succeeded(), eq(variables.isMaster, true)) 
+  displayName: Deploy Container
+  jobs:
+  - job: Deploy
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: $(azureSubscription)
+        appType: 'webAppContainer'
+        WebAppName: $(appName)
+        deployToSlotOrASE: true
+        ResourceGroupName: 'openhackydy7auy8rg'
+        SlotName: 'staging'
+        DockerNamespace: 'openhackydy7auy8acr.azurecr.io'
+        DockerRepository: 'devopsoh/api-trips'
+        DockerImageTag: '$(Build.BuildId)'
