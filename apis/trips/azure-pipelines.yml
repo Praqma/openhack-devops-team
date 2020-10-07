@@ -15,6 +15,7 @@ trigger:
     include:
     - apis/trips/*
 
+# How does this affect PR creation. Not set in GUI?
 pr:
   branches:
     include:
