@@ -70,7 +70,6 @@ stages:
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
-        arguments: "--target final"
         tags: |
           $(tag)
 
