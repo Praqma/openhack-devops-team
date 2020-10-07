@@ -20,6 +20,8 @@ variables:
   dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
   imageRepository: 'devopsoh/api-userprofile'
   containerRegistry: 'openhackydy7auy8acr.azurecr.io'
+
+  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   dockerfilePath: '$(Build.SourcesDirectory)/apis/userprofile/Dockerfile'
   tag: '$(Build.BuildId)'
 
@@ -52,6 +54,8 @@ stages:
         mergeTestResults: true
         testRunTitle: 'Unit Tests(MockIt)'
 - stage: Build_Final
+  # Only push new image if it is master branch. E.g after PR approval.
+  condition: and(succeeded(), eq(variables.isMaster, true)) 
   displayName: Build Runtime Image
   jobs:  
   - job: Publish_Image
