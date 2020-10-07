@@ -2,6 +2,9 @@
 # Build a Docker image 
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
+
+name: trips
+
 # specific path build
 trigger:
   branches:
@@ -12,7 +15,10 @@ trigger:
     include:
     - apis/trips/*
 
-name: trips
+pr:
+  branches:
+    include:
+      - master
 
 resources:
 - repo: self
@@ -53,7 +59,7 @@ stages:
         arguments: '-v ./tests -cover'
         workingDirectory: '$(Build.SourcesDirectory)/apis/trips'
 - stage: Build_Final
-  # Only push new image if it is master branch.
+  # Only push new image if it is master branch. E.g after PR approval.
   condition: and(succeeded(), eq(variables.isMaster, true)) 
   displayName: Build Runtime Image
   jobs:  
