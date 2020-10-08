@@ -75,7 +75,6 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        #buildContext: '.'
         tags: |
           $(tag)
           latest
@@ -88,7 +87,11 @@ stages:
     steps:
     - task: AzureWebAppContainer@1
       inputs:
+        deployToSlotOrASE: true
+        ResourceGroupName: 'openhackydy7auy8rg'
+        SlotName: 'production'
         azureSubscription: $(azureSubscription)
         appName: $(appName)
-        containers: $(containerRegistry)/$(imageRepository):$(tag)
+        imageDigestComposeFile: "$(imageRepository):$(tag)"
+        #containers: $(containerRegistry)/$(imageRepository):$(tag)
 
