@@ -73,7 +73,7 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-          'latest'
+          latest
 - stage: Deploy
   # Only deploy image if pushed from master branch. E.g after PR approval.
   condition: and(succeeded(), eq(variables.isMaster, true)) 
