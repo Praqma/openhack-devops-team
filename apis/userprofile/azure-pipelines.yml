@@ -72,9 +72,8 @@ stages:
       displayName: Build Deployable Image
       inputs:
         command: buildAndPush
-        containerRegistry: $(containerRegistry)
+        containerRegistry: $(dockerRegistryServiceConnection)
         repository: $(imageRepository)
-        #dockerRegistryServiceConnection: $(dockerRegistryServiceConnection)
         dockerfile: $(dockerfilePath)
         buildContext: '.'
         tags: |
