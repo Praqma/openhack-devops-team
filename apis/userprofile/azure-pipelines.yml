@@ -75,7 +75,7 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        buildContext: '.'
+        #buildContext: '.'
         tags: |
           $(tag)
           latest
