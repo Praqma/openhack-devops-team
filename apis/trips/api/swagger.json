@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "0.0.1",
-    "title": "MyDriving Trips API"
+    "version": "0.0.2",
+    "title": "CHANGED BY TIM. MyDriving Trips API"
   },
   "basePath": "/api",
   "schemes": [
