@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API for the user profile in the My Driving example app. https://github.com/Azure-Samples/openhack-devops",
-        "version": "0.1.0",
+        "description": "CHANGED BY TIM. API for the user profile in the My Driving example app. https://github.com/Azure-Samples/openhack-devops",
+        "version": "0.2.0",
         "title": "My Driving User Profile API"
     },
     "basePath": "/api",
