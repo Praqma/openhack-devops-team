@@ -18,6 +18,9 @@ resources:
 - repo: self
 
 variables:
+  azureSubscription: 'OTA-PRD-197(87d46c94-c5c9-4807-8e95-788ae5f0629b)'
+  appName: 'openhackydy7auy8userprofile'
+
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
   imageRepository: 'devopsoh/api-userprofile'
@@ -74,6 +77,17 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-
-
+          latest
+- stage: Deploy
+  # Only deploy image if pushed from master branch. E.g after PR approval.
+  condition: and(succeeded(), eq(variables.isMaster, true)) 
+  displayName: Deploy Container
+  jobs:
+  - job: Deploy
+    steps:
+    - task: AzureWebAppContainer@1
+      inputs:
+        azureSubscription: $(azureSubscription)
+        appName: $(appName)
+        containers: $(containerRegistry)/$(imageRepository):$(tag)
 
