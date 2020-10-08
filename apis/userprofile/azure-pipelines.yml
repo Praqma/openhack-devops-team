@@ -88,8 +88,8 @@ stages:
     - task: AzureWebAppContainer@1
       inputs:
         deployToSlotOrASE: true
-        ResourceGroupName: 'openhackydy7auy8rg'
-        SlotName: 'production'
+        resourceGroupName: 'openhackydy7auy8rg'
+        slotName: 'staging'
         azureSubscription: $(azureSubscription)
         appName: $(appName)
         imageName: "$(containerRegistry)/$(imageRepository):$(tag)"
