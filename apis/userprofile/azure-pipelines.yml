@@ -92,6 +92,6 @@ stages:
         SlotName: 'production'
         azureSubscription: $(azureSubscription)
         appName: $(appName)
-        imageDigestComposeFile: "$(imageRepository):$(tag)"
+        imageName: "$(containerRegistry)/$(imageRepository):$(tag)"
         #containers: $(containerRegistry)/$(imageRepository):$(tag)
 
