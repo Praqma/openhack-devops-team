@@ -1,6 +1,6 @@
-# Docker
-# Build a Docker image 
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# Runs build and unit test within the container.
+# Extracts test results from container and publishes them.
+# If source branch is master will push docker image and deploy to staging slot.
 
 name: user-java
 
@@ -19,15 +19,12 @@ resources:
 
 variables:
   azureSubscription: 'OTA-PRD-197(87d46c94-c5c9-4807-8e95-788ae5f0629b)'
-  appName: 'openhackydy7auy8userjava'
-
-  # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
   imageRepository: 'devopsoh/api-user-java'
   containerRegistry: 'openhackydy7auy8acr.azurecr.io'
-  
-  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   dockerfilePath: '$(Build.SourcesDirectory)/apis/user-java/Dockerfile'
+  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+  appName: 'openhackydy7auy8userjava'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -58,8 +55,8 @@ stages:
         searchFolder: '$(Build.ArtifactStagingDirectory)/testresults'
         mergeTestResults: true
         testRunTitle: 'Unit Tests(MockIt)'
+
 - stage: Build_Final
-  # Only push new image if it is master branch. E.g after PR approval.
   condition: and(succeeded(), eq(variables.isMaster, true)) 
   displayName: Build Runtime Image
   jobs:  
@@ -72,14 +69,14 @@ stages:
       displayName: Build And Push Image
       inputs:
         command: buildAndPush
+        containerRegistry: $(dockerRegistryServiceConnection)
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
           latest
+
 - stage: Deploy
-  # Only deploy image if pushed from master branch. E.g after PR approval.
   condition: and(succeeded(), eq(variables.isMaster, true)) 
   displayName: Deploy Container
   jobs:
@@ -88,5 +85,8 @@ stages:
     - task: AzureWebAppContainer@1
       inputs:
         azureSubscription: $(azureSubscription)
+        resourceGroupName: 'openhackydy7auy8rg'
+        deployToSlotOrASE: true
+        slotName: 'staging'
         appName: $(appName)
-        containers: $(containerRegistry)/$(imageRepository):$(tag)
+        imageName: $(containerRegistry)/$(imageRepository):$(tag)

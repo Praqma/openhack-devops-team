@@ -1,7 +1,6 @@
-# Docker
-# Build a Docker image 
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
+# Runs build and unit test outside of container.
+# Extracts test results from container and publishes them.
+# If source branch is master will build push docker image and deploy to staging slot.
 
 name: trips
 
@@ -20,17 +19,17 @@ resources:
 
 variables:
   azureSubscription: 'OTA-PRD-197(87d46c94-c5c9-4807-8e95-788ae5f0629b)'
-  appName: 'openhackydy7auy8trips'
   dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
   imageRepository: 'devopsoh/api-trips'
   containerRegistry: 'openhackydy7auy8acr.azurecr.io'
-  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
   dockerfilePath: '$(Build.SourcesDirectory)/apis/trips/Dockerfile'
+  isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+  appName: 'openhackydy7auy8trips'
   tag: '$(Build.BuildId)'
 
 stages:
 - stage: Build_Test
-  displayName: Build and Unit Test
+  displayName: Build And Unit Test
   jobs:
   - job: Build
     displayName: Build
@@ -54,8 +53,8 @@ stages:
         command: 'test'
         arguments: '-v ./tests -cover'
         workingDirectory: '$(Build.SourcesDirectory)/apis/trips'
-- stage: Build_Final
-  # Only push new image if it is master branch. E.g after PR approval.
+
+- stage: Build_Final  
   condition: and(succeeded(), eq(variables.isMaster, true)) 
   displayName: Build Runtime Image
   jobs:  
@@ -68,31 +67,24 @@ stages:
       displayName: Build And Push Image
       inputs:
         command: buildAndPush
+        containerRegistry: $(dockerRegistryServiceConnection)
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
           latest
+
 - stage: Deploy
-  # Only deploy image if pushed from master branch. E.g after PR approval.
   condition: and(succeeded(), eq(variables.isMaster, true)) 
   displayName: Deploy Container
   jobs:
   - job: Deploy
     steps:
-    #- task: AzureRmWebAppDeployment@4
     - task: AzureWebAppContainer@1
       inputs:
-        #ConnectionType: 'AzureRM'
         azureSubscription: $(azureSubscription)
-        #appType: 'webAppContainer'
-        #WebAppName: $(appName)
-        #deployToSlotOrASE: true
-        #ResourceGroupName: 'openhackydy7auy8rg'
-        #SlotName: 'production'
-        #DockerNamespace: 'openhackydy7auy8acr.azurecr.io'
-        #DockerRepository: 'devopsoh/api-trips'
-        #DockerImageTag: '$(Build.BuildId)'
+        resourceGroupName: 'openhackydy7auy8rg'
+        deployToSlotOrASE: true
+        slotName: 'staging'
         appName: $(appName)
-        containers: $(containerRegistry)/$(imageRepository):$(tag)
+        imageName: "$(containerRegistry)/$(imageRepository):$(tag)"
