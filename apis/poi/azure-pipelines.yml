@@ -17,13 +17,13 @@ resources:
 - repo: self
 
 variables:
-  azureSubscription: 'OTA-PRD-197(87d46c94-c5c9-4807-8e95-788ae5f0629b)'
-  dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
+  azureSubscription: 'OTA-PRD-232(1f927c05-e256-4fdc-9c64-7409f370269d)'
+  #dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
   imageRepository: 'devopsoh/api-poi'
-  containerRegistry: 'openhackydy7auy8acr.azurecr.io'
+  containerRegistry: 'openhack4d121pu9acr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/apis/poi/Dockerfile'
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
-  appName: 'openhackydy7auy8poi'
+  appName: 'openhack4d121pu9poi'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -68,7 +68,7 @@ stages:
       displayName: Build Deployable Image
       inputs:
         command: buildAndPush
-        containerRegistry: $(dockerRegistryServiceConnection)
+        #containerRegistry: $(dockerRegistryServiceConnection)
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
         tags: |
