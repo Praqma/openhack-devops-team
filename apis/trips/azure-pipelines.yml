@@ -18,13 +18,14 @@ resources:
 - repo: self
 
 variables:
-  azureSubscription: 'OTA-PRD-197(87d46c94-c5c9-4807-8e95-788ae5f0629b)'
-  dockerRegistryServiceConnection: '593474d4-1b31-441a-838b-adcd84a14eb0'
+  azureSubscription: 'OTA-PRD-232(1f927c05-e256-4fdc-9c64-7409f370269d)'
+  resourceGroup: 'openhack4d121pu9rg'
+  dockerRegistryServiceConnection: 'openhack-docker-registry'
   imageRepository: 'devopsoh/api-trips'
-  containerRegistry: 'openhackydy7auy8acr.azurecr.io'
+  containerRegistry: 'openhack4d121pu9acr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/apis/trips/Dockerfile'
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
-  appName: 'openhackydy7auy8trips'
+  appName: 'openhack4d121pu9trips'
   tag: '$(Build.BuildId)'
 
 stages:
@@ -64,7 +65,7 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
-      displayName: Build And Push Image
+      displayName: Build Deployable Image
       inputs:
         command: buildAndPush
         containerRegistry: $(dockerRegistryServiceConnection)
@@ -83,7 +84,7 @@ stages:
     - task: AzureWebAppContainer@1
       inputs:
         azureSubscription: $(azureSubscription)
-        resourceGroupName: 'openhackydy7auy8rg'
+        resourceGroupName: $(resourceGroup)
         deployToSlotOrASE: true
         slotName: 'staging'
         appName: $(appName)
