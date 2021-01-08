@@ -75,17 +75,18 @@ stages:
           $(tag)
           latest
 
-- stage: Deploy
-  condition: and(succeeded(), eq(variables.isMaster, true)) 
-  displayName: Deploy Container
-  jobs:
-  - job: Deploy
-    steps:
-    - task: AzureWebAppContainer@1
-      inputs:
-        azureSubscription: $(azureSubscription)
-        resourceGroupName: 'openhackydy7auy8rg'
-        deployToSlotOrASE: true
-        slotName: 'staging'
-        appName: $(appName)
-        imageName: "$(containerRegistry)/$(imageRepository):$(tag)"
+
+#- stage: Deploy
+#  condition: and(succeeded(), eq(variables.isMaster, true)) 
+#  displayName: Deploy Container
+#  jobs:
+#  - job: Deploy
+#    steps:
+#    - task: AzureWebAppContainer@1
+#      inputs:
+#        azureSubscription: $(azureSubscription)
+#        resourceGroupName: 'openhackydy7auy8rg'
+#        deployToSlotOrASE: true
+#        slotName: 'staging'
+#        appName: $(appName)
+#        imageName: "$(containerRegistry)/$(imageRepository):$(tag)"
