@@ -18,14 +18,14 @@ resources:
 - repo: self
 
 variables:
-  azureSubscription: 'OTA-PRD-232(1f927c05-e256-4fdc-9c64-7409f370269d)'
-  resourceGroup: 'openhack4d121pu9rg'
-  dockerRegistryServiceConnection: 'openhack-docker-registry'
+  azureSubscription: 'OTA-PRD-232(1f927c05-e256-4fdc-9c64-7409f370269d)' # This needs to be updated for new environments.
+  resourceGroup: 'openhack4d121pu9rg' # This needs to be updated for new environments.
+  dockerRegistryServiceConnection: 'openhack-docker-registry' # This needs to be updated for new environments after you create a new service connection from ADO.
   imageRepository: 'devopsoh/api-userprofile'
-  containerRegistry: 'openhack4d121pu9acr.azurecr.io'
+  containerRegistry: 'openhack4d121pu9acr.azurecr.io' # This needs to be updated for new environments.
   dockerfilePath: '$(Build.SourcesDirectory)/apis/userprofile/Dockerfile'
   isMaster: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
-  appName: 'openhack4d121pu9userprofile'
+  appName: 'openhack4d121pu9userprofile' # This needs to be updated for new environments.
   tag: '$(Build.BuildId)'
 
 stages:
