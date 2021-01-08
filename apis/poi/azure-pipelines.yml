@@ -18,6 +18,7 @@ resources:
 
 variables:
   azureSubscription: 'OTA-PRD-232(1f927c05-e256-4fdc-9c64-7409f370269d)'
+  resourceGroup: 'openhack4d121pu9rg'
   dockerRegistryServiceConnection: 'openhack-docker-registry'
   imageRepository: 'devopsoh/api-poi'
   containerRegistry: 'openhack4d121pu9acr.azurecr.io'
@@ -75,18 +76,17 @@ stages:
           $(tag)
           latest
 
-
-#- stage: Deploy
-#  condition: and(succeeded(), eq(variables.isMaster, true)) 
-#  displayName: Deploy Container
-#  jobs:
-#  - job: Deploy
-#    steps:
-#    - task: AzureWebAppContainer@1
-#      inputs:
-#        azureSubscription: $(azureSubscription)
-#        resourceGroupName: 'openhackydy7auy8rg'
-#        deployToSlotOrASE: true
-#        slotName: 'staging'
-#        appName: $(appName)
-#        imageName: "$(containerRegistry)/$(imageRepository):$(tag)"
+- stage: Deploy
+  condition: and(succeeded(), eq(variables.isMaster, true)) 
+  displayName: Deploy Container
+  jobs:
+  - job: Deploy
+    steps:
+    - task: AzureWebAppContainer@1
+      inputs:
+        azureSubscription: $(azureSubscription)
+        resourceGroupName: $(resourceGroup)
+        deployToSlotOrASE: true
+        slotName: 'staging'
+        appName: $(appName)
+        imageName: "$(containerRegistry)/$(imageRepository):$(tag)"
